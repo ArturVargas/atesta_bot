@@ -32,9 +32,12 @@ Tech Stack:
 ### Sending command `/attest` to bot
 
 ![message_to_bot](./assets/bot.png)
+![integration](./assets/integration.jpg)
 
 ### EAS explorer
 
-![eas_explorer](./assets//onchain_attestation.png)
+![eas_explorer](./assets/onchain_attestation.png)
+![OnchainAttestation](./assets/OnchainAttestation.png)
 
-[Attestation onchain](https://sepolia.easscan.org/attestation/view/0x7a1abbc59866798ea8a5e779da5f809fba0d9862f4985de7e804884b87de4801)
+[onchain attestation](https://sepolia.easscan.org/attestation/view/0x7a1abbc59866798ea8a5e779da5f809fba0d9862f4985de7e804884b87de4801)
+[onchain attestation](https://sepolia.easscan.org/attestation/view/0x382c9aeb4034bc9e45ee6e74e3ea64e0b360d578289ea401f5613c161273f145)
