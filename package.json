@@ -19,6 +19,7 @@
     "@ethereum-attestation-service/eas-sdk": "^1.4.1",
     "dotenv": "^16.4.1",
     "ethers": "^6.10.0",
+    "openai": "^4.27.0",
     "telegraf": "^4.15.3",
     "typegram": "^5.2.0"
   }
