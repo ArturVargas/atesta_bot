@@ -1,7 +1,7 @@
 import { Telegraf } from 'telegraf'
 import { message } from 'telegraf/filters'
 
-const bot = new Telegraf("6380507359:AAHsExNiLLuR_Cb_4EuiFcqCm6uuxnx9idI");
+const bot = new Telegraf(process.env.TOKEN_BOT as string);
 
 import { EAS, SchemaEncoder, SchemaRegistry } from "@ethereum-attestation-service/eas-sdk";
 import { ethers } from 'ethers';
