@@ -22,7 +22,7 @@ interface ISchema {
 /**
 	* Facade for the EAS 
 */
-class Attester {
+export class Attester {
 	eas: EAS;
 	private schemaUID: string;
 

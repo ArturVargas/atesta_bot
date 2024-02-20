@@ -3,7 +3,7 @@ import { Scenes } from "telegraf";
 export const attestScene = new Scenes.BaseScene('ATTESTA_SCENE')
 
 attestScene.enter((ctx) => {
-	ctx.reply('mesta')
+	ctx.reply('mesta [sent from attesta scene]')
 })
 
 // attestScene.enter((ctx) => {
