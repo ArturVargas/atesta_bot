@@ -4,9 +4,15 @@
 
 Some entities like Daos use multi-signature wallets, and when their collaborators have off-chain expenses, it's harder to track and justify those expenses. Now, through the bot, we can create an attestation of that ticket with just a photo and in a user-friendly way.
 
+### Tangible uses cases
+
+* Attestation of DAO's Financial Resource Management.
+  * Tracking offchain events (expenses).
+  * Expenses review for DAO members.
+
 ## What does this bot do?
 
-Create an attestation with EAS SDK for manage `Offchain Expenses Bills` for DAOs, Multisig, Communnities, or just for normal people.
+Create an attestation with EAS SDK for manage `Offchain Expenses Bills` for DAOs, Multisig, Communnities, or just for normal people. This bot prevents our users from publishing sensitive data by only requesting relevant information for the ticket attestation.
 
 ## How We do?
 
@@ -16,6 +22,8 @@ Tech Stack:
 * EAS SDK
 * EthersJS
 * Telegraph
+
+### User flow
 
 ![atesta_mesta](./assets/atesta_mesta_diagram.png)
 
