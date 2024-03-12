@@ -1,20 +1,43 @@
-import { Scenes } from "telegraf";
+// @ts-nocheck
+import { Markup, Scenes } from "telegraf";
 
 export const attestScene = new Scenes.BaseScene('ATTESTA_SCENE')
 
-attestScene.enter((ctx) => {
-	ctx.reply('mesta [sent from attesta scene]')
+// attestation flow 
+// 1. ticket photo
+// 1.1 save it in storage
+// 1.2 create new attestation record in db
+//
+// 2. fiat amount in usd
+// 2.1 update attestation in db 
+//
+// 3. select chain (selector)
+// 3.1 update attestation in db 
+//
+// 4. set recipent
+
+attestScene.enter(async (ctx) => {
+	console.log('[attest scene started]')
+	ctx.session.attestationData = {
+		chatId: ctx.chat?.id
+	}
+
+	await ctx.reply('Attestation scene started', Markup.inlineKeyboard([
+		Markup.button.callback('Movie button', 'MOVIE_ACTION'),
+		Markup.button.callback('Second button', 'SECOND_ACTION'),
+	]))
+
 })
 
-// attestScene.enter((ctx) => {
-// 	// todo: define
-// })
+attestScene.action('MOVIE_ACTION', async (ctx) => {
+	await ctx.reply('Movie triggered')
+})
 
-// todo: add some actions 
-// 1. ask for the dao name
-// 2. ticket ref? 
-// 3. event name 
-// 4. payed
+attestScene.action('SECOND_ACTION', async (ctx) => {
+	await ctx.reply('Second button triggered')
+	// ctx.scene.enter('SETUP_SCENE')
+})
+
 
 // scenarioTypeScene.enter((ctx) => {
 //   ctx.session.myData = {};
