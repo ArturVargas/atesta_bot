@@ -4,8 +4,9 @@
 	"description": "",
 	"main": "dist/app.js",
 	"scripts": {
-		"build": "tsc",
-		"start": "node dist/app.js"
+		"start": "node dist/app.js",
+		"prestart": "npm run build",
+		"build": "tsc"
 	},
 	"keywords": [],
 	"author": "",
