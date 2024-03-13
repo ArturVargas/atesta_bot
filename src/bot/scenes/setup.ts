@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { Scenes } from "telegraf";
+import { supabase } from "../../db";
 
 // Require a wallet 
 // Require the user's name
@@ -21,18 +22,32 @@ export const setupScene = new Scenes.WizardScene(
 			return;
 		}
 		ctx.wizard.state.userData.name = ctx.message.text;
-		await ctx.reply(`Great!, now enter an evm address associated with your attestations`);
+		await ctx.reply(`Great! now enter an evm address associated with your attestations`);
 		await ctx.reply('Notice that this will be the address to which entities will be sending the corresponding payments')
 		return ctx.wizard.next();
 	},
 	async (ctx) => {
-		// todo: validate email
+		// todo: validate address
 		ctx.wizard.state.userData.address = ctx.message.text;
-		await ctx.reply('Thank you, that\'s enough for now')
+
+		await ctx.reply('Saving your profile...')
+		const { error } = await supabase
+			.from('attesters')
+			.insert(ctx.wizard.state.userData)
+
+		if (error) {
+			console.error(error)
+			await ctx.reply('Something went wrong creating the user:')
+			await ctx.reply(error.message)
+			return
+		}
+
+		await ctx.reply('That\'s it! you are all set')
 		await ctx.reply('Try calling the /attest command to create your first attestation')
-		// todo: store response in db maybe?
-		await ctx.reply('Your responses:');
-		await ctx.reply(JSON.stringify(ctx.wizard.state.userData))
+
+		console.log('New user created')
+		console.log(JSON.stringify(ctx.wizard.state.userData))
+
 		return ctx.scene.leave();
 	},
 );

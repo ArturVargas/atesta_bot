@@ -18,6 +18,7 @@
 	},
 	"dependencies": {
 		"@ethereum-attestation-service/eas-sdk": "^1.4.1",
+		"@supabase/supabase-js": "^2.39.8",
 		"dotenv": "^16.4.1",
 		"ethers": "^6.10.0",
 		"telegraf": "^4.15.3",
