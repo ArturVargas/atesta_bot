@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { Input, Markup, Scenes } from "telegraf";
+import { Markup, Scenes } from "telegraf";
+import { uploadFile } from "../../db";
+import { Bucket } from "../../types/buckets";
 
 export const attestScene = new Scenes.BaseScene('ATTESTA_SCENE')
 
@@ -31,18 +33,21 @@ attestScene.enter(async (ctx) => {
 
 attestScene.on('photo', async (ctx) => {
 	try {
+		const photo = ctx.message.photo.pop()
 		console.log('photo detected')
 		console.log(photo.width)
 		console.log(photo.file_unique_id)
 
-		const photo = ctx.message.photo.pop()
 		const fileLink = await ctx.telegram.getFileLink(photo?.file_id)
 
 		const res = await fetch(fileLink)
 		const file = await res.blob()
 
-		await ctx.reply(file.type)
-		await ctx.reply(file.size)
+		const fileName = `${photo?.file_unique_id}.jpeg`
+
+		const url = await uploadFile(Bucket.Tickets, fileName, file)
+
+		await ctx.reply(url)
 	} catch (error) {
 		console.error(error)
 		await ctx.reply('Error')
