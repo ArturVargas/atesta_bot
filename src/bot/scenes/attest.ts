@@ -8,10 +8,8 @@ export const attestScene = new Scenes.BaseScene('ATTESTA_SCENE')
 // attestation flow 
 // 1. ticket photo
 // 1.1 save it in storage
-// 1.2 create new attestation record in db
 //
 // 2. fiat amount in usd
-// 2.1 update attestation in db 
 //
 // 3. select chain (selector)
 // 3.1 update attestation in db 
@@ -24,45 +22,59 @@ attestScene.enter(async (ctx) => {
 		chatId: ctx.chat?.id
 	}
 
-	await ctx.reply('Attestation scene started', Markup.inlineKeyboard([
-		Markup.button.callback('Movie button', 'MOVIE_ACTION'),
-		Markup.button.callback('Second button', 'SECOND_ACTION'),
-	]))
-
+	await ctx.reply('Send a photo of the ticket')
+	// await ctx.reply('Attestation scene started', Markup.inlineKeyboard([
+	// 	Markup.button.callback('Movie button', 'MOVIE_ACTION'),
+	// 	Markup.button.callback('Second button', 'SECOND_ACTION'),
+	// ]))
 })
 
 attestScene.on('photo', async (ctx) => {
 	try {
-		const photo = ctx.message.photo.pop()
-		console.log('photo detected')
-		console.log(photo.width)
-		console.log(photo.file_unique_id)
+		await ctx.reply('Uploading photo...')
 
+		const photo = ctx.message.photo.pop()
 		const fileLink = await ctx.telegram.getFileLink(photo?.file_id)
 
+		// download file from telegram servers
 		const res = await fetch(fileLink)
 		const file = await res.blob()
 
-		const fileName = `${photo?.file_unique_id}.jpeg`
-
+		// upload the file to supbase
+		const fileName = `ticket-${photo?.file_unique_id}-${Date.now()}.jpeg`
 		const url = await uploadFile(Bucket.Tickets, fileName, file)
+		console.log(`Image uploaded: ${url}`)
+		await ctx.reply('Done')
 
-		await ctx.reply(url)
+		// await ctx.reply(url)
+		ctx.session.attestationData.imageUrl = url
+		await ctx.reply('Now enter the fiat amount to be payed in USD')
 	} catch (error) {
-		console.error(error)
 		await ctx.reply('Error')
+		console.error(error)
+		await ctx.reply(error)
 	}
 })
 
-attestScene.action('MOVIE_ACTION', async (ctx) => {
-	await ctx.reply('Movie triggered')
+// hears for numbers
+attestScene.hears(/-?\d+(\.\d+)?/, async (ctx) => {
+	const amount = Number(ctx.text)
+
+	ctx.session.attestationData.amount = amount
+
+	// ask the user for the chain where the attestation is gonna be made
+	await ctx.reply('Select a chain to create the attestation', Markup.inlineKeyboard([
+		Markup.button.callback('Optimism', 'OPTIMISM_ATTESTATION'),
+		Markup.button.callback('Arbitrum', 'ARBITRUM_ATTESTATION'),
+	]))
 })
 
-attestScene.action('SECOND_ACTION', async (ctx) => {
-	await ctx.reply('Second button triggered')
-	// ctx.scene.enter('SETUP_SCENE')
+attestScene.action('OPTIMISM_ATTESTATION', async (ctx) => {
+	await ctx.reply('optmimism')
 })
-
+attestScene.action('ARBITRUM_ATTESTATION', async (ctx) => {
+	await ctx.reply('arbitrum')
+})
 
 // scenarioTypeScene.enter((ctx) => {
 //   ctx.session.myData = {};

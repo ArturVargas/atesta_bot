@@ -1,6 +1,6 @@
-import { ethers } from 'ethers'
 import { EAS, SchemaEncoder } from "@ethereum-attestation-service/eas-sdk";
-import { signer } from '../wallet';
+import { getSignerFor } from '../wallet';
+import { Chains } from "../wallet/chains";
 
 const EAS_ADDRESS = "0xC2679fBD37d54388Ce493F1DB75320D236e1815e"; // "0x0a7E2Ff54e76B8E6659aedc9103FB21c038050D0";
 const SCHEMA_UID = "0x327ff96e3e610b2c0d090a3a8d2b995644461930ca1ab54431222e2fd09bbaa9";
@@ -13,10 +13,17 @@ const schemaEncoder = new SchemaEncoder("string DAO_name,bytes32 ticket_ref,bool
 // 	{ name: "event_name", value: "ethcdm", type: "string" }
 // ]);
 
-interface ISchema {
+interface ISchemaItem {
 	name: string,
 	value: any,
 	type: string
+}
+
+interface ISchema {
+	daoName: string,
+	ticketRef: string, //?
+	isPayed: boolean,
+	eventName: string
 }
 
 /**
@@ -26,17 +33,18 @@ export class Attester {
 	eas: EAS;
 	private schemaUID: string;
 
-	constructor(signer: ethers.Wallet) {
+	constructor(chain: Chains) {
+		const signer = getSignerFor(chain)
 		this.eas = new EAS(EAS_ADDRESS).connect(signer);
 		this.schemaUID = SCHEMA_UID;
 	}
 
 	/**
 		* Creates a new attestation
-		* @param data - An array of values compliant with our schema (ISchema)
+		* @param data - An array of values compliant with our schema (ISchemaItem)
 		* @returns the new attestation uid
 	*/
-	async createAttestation(data: ISchema[]) {
+	async createAttestation(data: ISchemaItem[]) {
 		const _encodedData = schemaEncoder.encodeData(data)
 
 		const tx = await this.eas.attest({
@@ -53,5 +61,3 @@ export class Attester {
 		return newAttestationUID;
 	}
 }
-
-export const attester = new Attester(signer);
